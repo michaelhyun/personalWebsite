@@ -308,6 +308,44 @@
     });
   });
 
+  /* ----------  NEWSLETTER FORM → /api/subscribe (Follow Up Boss, tagged "Newsletter")  ---------- */
+  document.querySelectorAll("[data-newsletter-form]").forEach(function (form) {
+    var status = form.querySelector(".form-status");
+    var submit = form.querySelector("button[type=submit]");
+    var okMsg = form.dataset.successMessage || "You’re on the list — thank you for subscribing!";
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      var emailEl = form.querySelector("input[type=email], input[name=email]");
+      var err = emailEl && emailEl.parentElement.querySelector(".field-error");
+      var bad = !emailEl || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(emailEl.value.trim());
+      if (err) err.textContent = bad ? "Please enter a valid email." : "";
+      if (bad) { if (emailEl) emailEl.focus(); return; }
+
+      if (status) { status.textContent = ""; status.className = "form-status"; }
+      if (submit) { submit.disabled = true; submit.dataset.label = submit.textContent; submit.textContent = "Subscribing…"; }
+
+      var data = new FormData(form);
+      fetch("/api/subscribe", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: data.get("email"), name: data.get("name") || "", message: data.get("message") || "" })
+      })
+        .then(function (r) { return r.json(); })
+        .then(function (res) {
+          if (res && res.success) {
+            form.reset();
+            if (status) { status.textContent = okMsg; status.className = "form-status ok"; }
+          } else { throw new Error(); }
+        })
+        .catch(function () {
+          if (status) { status.textContent = "Something went wrong. Please email michael.hyun@compass.com directly."; status.className = "form-status err"; }
+        })
+        .finally(function () {
+          if (submit) { submit.disabled = false; submit.textContent = submit.dataset.label; }
+        });
+    });
+  });
+
   /* ----------  NEWSLETTER POPUP  ----------
      Appears a few seconds after the visit, asking for a newsletter sign-up.
      Submits into Follow Up Boss (same Web3Forms key). Remembered in
@@ -384,22 +422,14 @@
       btn.disabled = true; btn.textContent = "Subscribing…";
       statusEl.textContent = ""; statusEl.className = "nl-status";
 
-      var data = new FormData();
-      data.append("email", email);
-      data.append("interest", "Newsletter signup (popup)");
-      data.append("access_key", FUB_FORM_ENDPOINT_KEY);
-      data.append("subject", "Newsletter signup (popup) — michaelhyun.com");
-      data.append("from_name", "michaelhyun.com");
-
-      if (FUB_FORM_ENDPOINT_KEY === "YOUR-WEB3FORMS-ACCESS-KEY") {
-        statusEl.textContent = "You’re on the list — thank you!"; statusEl.className = "nl-status ok";
-        remember(); window.setTimeout(function () { closeModal(false); }, 2200); return;
-      }
-
-      fetch(FUB_ENDPOINT, { method: "POST", body: data })
+      fetch("/api/subscribe", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: email, message: "(via popup)" })
+      })
         .then(function (r) { return r.json(); })
         .then(function (res) {
-          if (res.success) {
+          if (res && res.success) {
             statusEl.textContent = "You’re on the list — watch your inbox. Thank you!";
             statusEl.className = "nl-status ok";
             remember(); window.setTimeout(function () { closeModal(false); }, 2600);
