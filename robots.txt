@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://michaelhyunn.com/sitemap.xml
+Sitemap: https://www.michaelhyunn.com/sitemap.xml
