@@ -1,0 +1,11 @@
+# OS / tooling
+.DS_Store
+node_modules/
+*.log
+
+# Private — never publish
+business_plan.md
+.claude/
+
+# Unused duplicate asset (clean copy is michael-portrait.jpg)
+assets/img/portrait2 (1).jpg
