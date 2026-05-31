@@ -300,6 +300,7 @@ body.menu-open .menu-toggle span:nth-child(2) { transform: translateY(-5px) rota
 .split { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(2rem, 6vw, 6rem); align-items: center; }
 .split.align-start { align-items: start; }
 .split-media { position: relative; overflow: hidden; }
+.split-media picture { display: contents; }
 .split-media img { width: 100%; aspect-ratio: 4/5; object-fit: cover; transition: transform 1.4s var(--ease); }
 .split-media.tall img { aspect-ratio: 3/4; }
 .split-media:hover img { transform: scale(1.04); }

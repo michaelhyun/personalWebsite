@@ -3,6 +3,10 @@
 node_modules/
 *.log
 
+# Local build tooling only (sharp, for generating images) — keep the deploy static
+package.json
+package-lock.json
+
 # Private — never publish
 business_plan.md
 .claude/
