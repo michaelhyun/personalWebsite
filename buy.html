@@ -79,17 +79,47 @@
       </div>
     </section>
 
-    <!-- SEARCH -->
-    <section class="section-sm" style="padding-bottom:clamp(2rem,4vw,3rem)">
-      <div class="wrap search-block">
-        <h2 data-reveal>Start your home search</h2>
-        <p class="muted" data-reveal style="margin:1rem auto 0">Search Bay Area listings by neighborhood, city, or school district — updated in real time.</p>
-        <form class="search-bar" data-search-form data-reveal>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
-          <input type="text" name="q" placeholder="Search by neighborhood, city, or school" aria-label="Search listings" />
-          <button class="btn" type="submit">Search</button>
-        </form>
-        <p class="form-note center" data-reveal style="margin:1rem auto 0">Prefer a curated list? <a class="link-arrow" href="/contact" style="font-size:.9rem">Tell me what you’re looking for →</a></p>
+    <!-- START YOUR SEARCH (inquiry form) -->
+    <section class="section-sm">
+      <div class="wrap">
+        <div class="split align-start" data-reveal-group>
+          <div class="flow">
+            <p class="eyebrow" data-reveal>Start Your Search</p>
+            <h2 data-reveal style="--i:1">Tell me what you’re looking for.</h2>
+            <p class="muted" data-reveal style="--i:2">Share your must-haves — areas, budget, timeline — and I’ll put together a tailored plan and a shortlist of homes worth your time, including off-market opportunities. No pressure, no spam.</p>
+            <div class="stat-row" data-reveal style="--i:3">
+              <div class="stat"><div class="num">7</div><div class="label">Step buyer experience</div></div>
+              <div class="stat"><div class="num">24<span class="suffix">hr</span></div><div class="label">Typical response</div></div>
+            </div>
+          </div>
+          <form class="form" data-contact-form data-reveal style="--i:1">
+            <input type="hidden" name="interest" value="Buying a home" />
+            <div class="field">
+              <label for="b-name">Name <span class="req">*</span></label>
+              <input id="b-name" name="name" type="text" required autocomplete="name" placeholder="Your full name" data-error="Please enter your name." />
+              <span class="field-error" aria-live="polite"></span>
+            </div>
+            <div class="form-row">
+              <div class="field">
+                <label for="b-email">Email <span class="req">*</span></label>
+                <input id="b-email" name="email" type="email" required autocomplete="email" inputmode="email" placeholder="you@email.com" data-error="Please enter a valid email." />
+                <span class="field-error" aria-live="polite"></span>
+              </div>
+              <div class="field">
+                <label for="b-phone">Phone</label>
+                <input id="b-phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" placeholder="(408) 489-6868" />
+              </div>
+            </div>
+            <div class="field">
+              <label for="b-message">What you’re looking for <span class="req">*</span></label>
+              <textarea id="b-message" name="message" rows="4" required placeholder="Areas you’re considering, budget, bedrooms/baths, timeline…" data-error="Please add a few details."></textarea>
+              <span class="field-error" aria-live="polite"></span>
+            </div>
+            <div class="form-status" role="status" aria-live="polite"></div>
+            <button class="btn btn-lg" type="submit">Send my search <span class="arrow">→</span></button>
+            <p class="consent">By submitting this form, you agree that Michael Hyun · BlueDoor Realty may contact you by email, phone, and text message (including via automated technology) about your inquiry and real estate services. Message frequency varies; message &amp; data rates may apply. Reply STOP to opt out, HELP for help. Consent is not a condition of purchase. See our <a href="/privacy">Privacy Policy</a>.</p>
+          </form>
+        </div>
       </div>
     </section>
 
