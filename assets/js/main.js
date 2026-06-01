@@ -256,6 +256,8 @@
     var status = form.querySelector(".form-status");
     var submit = form.querySelector("button[type=submit]");
 
+    var okMsg = form.dataset.successMessage || "Thank you — your message is on its way. I’ll be in touch within one business day.";
+
     form.addEventListener("submit", function (e) {
       e.preventDefault();
       // simple validation
@@ -272,32 +274,27 @@
       if (submit) { submit.disabled = true; submit.dataset.label = submit.textContent; submit.textContent = "Sending…"; }
 
       var data = new FormData(form);
-      var interest = data.get("interest");
-      var okMsg = form.dataset.successMessage || "Thank you — your message is on its way. I’ll be in touch within one business day.";
-      data.append("access_key", FUB_FORM_ENDPOINT_KEY);
-      data.append("subject", (interest ? interest + " — " : "New website inquiry — ") + "michaelhyun.com");
-      data.append("from_name", "michaelhyun.com");
-
-      // If no key configured yet, fall back to a graceful mailto so nothing breaks.
-      if (FUB_FORM_ENDPOINT_KEY === "YOUR-WEB3FORMS-ACCESS-KEY") {
-        if (status) { status.textContent = "Thanks — opening your email client to send. (Connect Follow Up Boss to send automatically.)"; status.className = "form-status ok"; }
-        var body = encodeURIComponent(
-          "Name: " + (data.get("name") || "") + "\nEmail: " + (data.get("email") || "") +
-          "\nPhone: " + (data.get("phone") || "") + "\nInterest: " + (data.get("interest") || "") +
-          "\n\n" + (data.get("message") || ""));
-        window.location.href = "mailto:michael.hyun@compass.com?subject=" + encodeURIComponent("Website inquiry") + "&body=" + body;
-        if (submit) { submit.disabled = false; submit.textContent = submit.dataset.label; }
-        return;
-      }
-
-      fetch(FUB_ENDPOINT, { method: "POST", body: data })
+      // Routes through /api/subscribe -> Follow Up Boss. Every lead is tagged
+      // "Newsletter"; the form's data-tags adds extras (e.g. "Buyer" / "Seller").
+      fetch("/api/subscribe", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: data.get("name") || "",
+          email: data.get("email") || "",
+          phone: data.get("phone") || "",
+          message: data.get("message") || "",
+          interest: data.get("interest") || "",
+          tags: form.dataset.tags || ""
+        })
+      })
         .then(function (r) { return r.json(); })
         .then(function (res) {
-          if (res.success) {
+          if (res && res.success) {
             form.reset();
             if (status) { status.textContent = okMsg; status.className = "form-status ok"; }
             form.dispatchEvent(new CustomEvent("form:success", { bubbles: true }));
-          } else { throw new Error(res.message || "error"); }
+          } else { throw new Error(); }
         })
         .catch(function () {
           if (status) { status.textContent = "Something went wrong. Please email michael.hyun@compass.com directly."; status.className = "form-status err"; }
