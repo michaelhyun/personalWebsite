@@ -285,6 +285,7 @@
           phone: data.get("phone") || "",
           message: data.get("message") || "",
           interest: data.get("interest") || "",
+          sms_consent: form.querySelector("[name=sms_consent]") && form.querySelector("[name=sms_consent]").checked ? "yes" : "no",
           tags: form.dataset.tags || ""
         })
       })

@@ -562,6 +562,9 @@ body.menu-open .mobile-panel a { opacity: 1; transform: none; transition-delay: 
 .consent a { color: var(--bronze); text-decoration: underline; text-underline-offset: 2px; }
 .consent-links { font-size: 0.82rem; margin-top: 0.55rem; color: var(--muted-2); }
 .consent-links a { color: var(--bronze); text-decoration: underline; text-underline-offset: 2px; }
+.consent-check { display: flex; gap: 0.6rem; align-items: flex-start; font-size: 0.82rem; line-height: 1.5; color: var(--muted); margin: 0.2rem 0 1.1rem; cursor: pointer; }
+.consent-check input { flex: 0 0 auto; width: 1.05rem; height: 1.05rem; margin-top: 0.12rem; accent-color: var(--bronze); cursor: pointer; }
+.consent-check span { flex: 1; }
 
 /* ----------  NEWSLETTER POPUP  ---------- */
 .nl-modal { position: fixed; inset: 0; z-index: 1000; display: grid; place-items: center; padding: 1.5rem; }
