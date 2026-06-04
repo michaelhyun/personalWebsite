@@ -326,7 +326,14 @@
       fetch("/api/subscribe", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: data.get("email"), name: data.get("name") || "", message: data.get("message") || "" })
+        body: JSON.stringify({
+          email: data.get("email"),
+          name: data.get("name") || "",
+          message: data.get("message") || "",
+          phone: data.get("phone") || "",
+          interest: data.get("interest") || "",
+          sms_consent: form.querySelector("[name=sms_consent]") && form.querySelector("[name=sms_consent]").checked ? "yes" : "no"
+        })
       })
         .then(function (r) { return r.json(); })
         .then(function (res) {
