@@ -28,6 +28,7 @@ module.exports = async function handler(req, res) {
   var message = String(body.message || body.area || "").trim();
   var interest = String(body.interest || "").trim();
   var smsConsent = String(body.sms_consent || "").trim().toLowerCase() === "yes" ? "yes" : "no";
+  var smsMarketing = String(body.sms_marketing || "").trim().toLowerCase() === "yes" ? "yes" : "no";
 
   if (!EMAIL_RE.test(email)) {
     res.status(400).json({ success: false, message: "Please enter a valid email." });
@@ -40,8 +41,10 @@ module.exports = async function handler(req, res) {
     t = t.trim();
     if (t && tags.map(function (x) { return x.toLowerCase(); }).indexOf(t.toLowerCase()) === -1) tags.push(t);
   });
-  // Record explicit SMS opt-in so GHL only texts contacts who consented (A2P compliance).
-  if (smsConsent === "yes") tags.push("SMS-Consent");
+  // Record explicit, separate SMS opt-ins so GHL only texts contacts who consented
+  // to that message type (A2P compliance: distinct marketing vs non-marketing consent).
+  if (smsConsent === "yes") tags.push("SMS-Consent-CustomerCare");
+  if (smsMarketing === "yes") tags.push("SMS-Consent-Marketing");
 
   // Split full name into first/last for GHL.
   var firstName = name, lastName = "";
@@ -57,6 +60,7 @@ module.exports = async function handler(req, res) {
     message: message,
     interest: interest,
     sms_consent: smsConsent,
+    sms_marketing: smsMarketing,
     tags: tags.join(", "),
     source: "michaelhyunn.com" + (interest ? " — " + interest : "")
   };

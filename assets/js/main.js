@@ -286,6 +286,7 @@
           message: data.get("message") || "",
           interest: data.get("interest") || "",
           sms_consent: form.querySelector("[name=sms_consent]") && form.querySelector("[name=sms_consent]").checked ? "yes" : "no",
+          sms_marketing: form.querySelector("[name=sms_marketing]") && form.querySelector("[name=sms_marketing]").checked ? "yes" : "no",
           tags: form.dataset.tags || ""
         })
       })
@@ -332,7 +333,8 @@
           message: data.get("message") || "",
           phone: data.get("phone") || "",
           interest: data.get("interest") || "",
-          sms_consent: form.querySelector("[name=sms_consent]") && form.querySelector("[name=sms_consent]").checked ? "yes" : "no"
+          sms_consent: form.querySelector("[name=sms_consent]") && form.querySelector("[name=sms_consent]").checked ? "yes" : "no",
+          sms_marketing: form.querySelector("[name=sms_marketing]") && form.querySelector("[name=sms_marketing]").checked ? "yes" : "no"
         })
       })
         .then(function (r) { return r.json(); })
