@@ -240,123 +240,15 @@
     });
   });
 
-  /* ----------  CONTACT FORM → Follow Up Boss  ----------
-     HOW TO CONNECT (2 minutes, no server needed):
-     1. Create a free endpoint at https://web3forms.com (or use Formspree).
-     2. In your Web3Forms dashboard set the "Send a copy to" / forwarding
-        address to your Follow Up Boss lead-parsing email
-        (FUB → Admin → Lead Sources → "Add inbound email").
-     3. Paste your Web3Forms access key into FUB_FORM_ENDPOINT_KEY below.
-     FUB auto-creates a contact + assigns the lead source from each email.
-  ------------------------------------------------------------------ */
-  var FUB_FORM_ENDPOINT_KEY = "03501446-9da3-437f-844a-a8c5fcbd3289"; // <-- replace
-  var FUB_ENDPOINT = "https://api.web3forms.com/submit";
-
-  document.querySelectorAll("[data-contact-form]").forEach(function (form) {
-    var status = form.querySelector(".form-status");
-    var submit = form.querySelector("button[type=submit]");
-
-    var okMsg = form.dataset.successMessage || "Thank you — your message is on its way. I’ll be in touch within one business day.";
-
-    form.addEventListener("submit", function (e) {
-      e.preventDefault();
-      // simple validation
-      var firstInvalid = null;
-      form.querySelectorAll("[required]").forEach(function (f) {
-        var err = f.parentElement.querySelector(".field-error");
-        var bad = !f.value.trim() || (f.type === "email" && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(f.value));
-        if (err) err.textContent = bad ? (f.dataset.error || "Please complete this field.") : "";
-        if (bad && !firstInvalid) firstInvalid = f;
-      });
-      if (firstInvalid) { firstInvalid.focus(); return; }
-
-      if (status) { status.textContent = ""; status.className = "form-status"; }
-      if (submit) { submit.disabled = true; submit.dataset.label = submit.textContent; submit.textContent = "Sending…"; }
-
-      var data = new FormData(form);
-      // Routes through /api/subscribe -> Follow Up Boss. Every lead is tagged
-      // "Newsletter"; the form's data-tags adds extras (e.g. "Buyer" / "Seller").
-      fetch("/api/subscribe", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: data.get("name") || "",
-          email: data.get("email") || "",
-          phone: data.get("phone") || "",
-          message: data.get("message") || "",
-          interest: data.get("interest") || "",
-          sms_consent: form.querySelector("[name=sms_consent]") && form.querySelector("[name=sms_consent]").checked ? "yes" : "no",
-          sms_marketing: form.querySelector("[name=sms_marketing]") && form.querySelector("[name=sms_marketing]").checked ? "yes" : "no",
-          tags: form.dataset.tags || ""
-        })
-      })
-        .then(function (r) { return r.json(); })
-        .then(function (res) {
-          if (res && res.success) {
-            form.reset();
-            if (status) { status.textContent = okMsg; status.className = "form-status ok"; }
-            form.dispatchEvent(new CustomEvent("form:success", { bubbles: true }));
-          } else { throw new Error(); }
-        })
-        .catch(function () {
-          if (status) { status.textContent = "Something went wrong. Please email michael.hyun@compass.com directly."; status.className = "form-status err"; }
-        })
-        .finally(function () {
-          if (submit) { submit.disabled = false; submit.textContent = submit.dataset.label; }
-        });
-    });
-  });
-
-  /* ----------  NEWSLETTER FORM → /api/subscribe (Follow Up Boss, tagged "Newsletter")  ---------- */
-  document.querySelectorAll("[data-newsletter-form]").forEach(function (form) {
-    var status = form.querySelector(".form-status");
-    var submit = form.querySelector("button[type=submit]");
-    var okMsg = form.dataset.successMessage || "You’re on the list — thank you for subscribing!";
-    form.addEventListener("submit", function (e) {
-      e.preventDefault();
-      var emailEl = form.querySelector("input[type=email], input[name=email]");
-      var err = emailEl && emailEl.parentElement.querySelector(".field-error");
-      var bad = !emailEl || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(emailEl.value.trim());
-      if (err) err.textContent = bad ? "Please enter a valid email." : "";
-      if (bad) { if (emailEl) emailEl.focus(); return; }
-
-      if (status) { status.textContent = ""; status.className = "form-status"; }
-      if (submit) { submit.disabled = true; submit.dataset.label = submit.textContent; submit.textContent = "Subscribing…"; }
-
-      var data = new FormData(form);
-      fetch("/api/subscribe", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email: data.get("email"),
-          name: data.get("name") || "",
-          message: data.get("message") || "",
-          phone: data.get("phone") || "",
-          interest: data.get("interest") || "",
-          sms_consent: form.querySelector("[name=sms_consent]") && form.querySelector("[name=sms_consent]").checked ? "yes" : "no",
-          sms_marketing: form.querySelector("[name=sms_marketing]") && form.querySelector("[name=sms_marketing]").checked ? "yes" : "no"
-        })
-      })
-        .then(function (r) { return r.json(); })
-        .then(function (res) {
-          if (res && res.success) {
-            form.reset();
-            if (status) { status.textContent = okMsg; status.className = "form-status ok"; }
-          } else { throw new Error(); }
-        })
-        .catch(function () {
-          if (status) { status.textContent = "Something went wrong. Please email michael.hyun@compass.com directly."; status.className = "form-status err"; }
-        })
-        .finally(function () {
-          if (submit) { submit.disabled = false; submit.textContent = submit.dataset.label; }
-        });
-    });
-  });
+  /* ----------  FORMS  ----------
+     All lead forms (buy, sell, contact, newsletter) are embedded GoHighLevel
+     forms (iframes + form_embed.js). Submissions, tags, and contact fields
+     are handled inside GHL - no webhook or serverless function involved. */
 
   /* ----------  NEWSLETTER POPUP  ----------
      Appears a few seconds after the visit, asking for a newsletter sign-up.
-     Submits into Follow Up Boss (same Web3Forms key). Remembered in
-     localStorage so it shows at most once per visitor (until they clear it). */
+     Embeds the GoHighLevel newsletter form. Remembered in localStorage so it
+     shows at most once per visitor per week. */
   (function () {
     if (document.body.getAttribute("data-page") === "newsletter") return;
     var STORAGE_KEY = "mh_newsletter_v1";
@@ -381,19 +273,27 @@
         '<p class="eyebrow">The Newsletter</p>' +
         '<h2 id="nl-title">Bay Area market intel, <em>in your inbox.</em></h2>' +
         '<p class="nl-sub">Monthly market updates plus the occasional handwritten note when a move actually matters for Bay Area buyers and sellers. No spam — unsubscribe anytime.</p>' +
-        '<form class="nl-form" novalidate>' +
-          '<input type="email" name="email" required autocomplete="email" inputmode="email" placeholder="you@email.com" aria-label="Email address" />' +
-          '<button class="btn" type="submit">Subscribe <span class="arrow">→</span></button>' +
-        '</form>' +
-        '<div class="nl-status" role="status" aria-live="polite"></div>' +
+        '<div class="nl-embed" style="max-height:62vh;overflow-y:auto;-webkit-overflow-scrolling:touch">' +
+          '<iframe src="https://api.leadconnectorhq.com/widget/form/G3RGdSI5Lj04YZQebgHK"' +
+          ' style="width:100%;min-height:540px;border:none;border-radius:8px"' +
+          ' id="popup-G3RGdSI5Lj04YZQebgHK"' +
+          ' data-layout="{\'id\':\'INLINE\'}" data-trigger-type="alwaysShow" data-trigger-value=""' +
+          ' data-activation-type="alwaysActivated" data-activation-value=""' +
+          ' data-deactivation-type="neverDeactivate" data-deactivation-value=""' +
+          ' data-form-name="Website - Newsletter Form" data-height="721"' +
+          ' data-layout-iframe-id="popup-G3RGdSI5Lj04YZQebgHK" data-form-id="G3RGdSI5Lj04YZQebgHK"' +
+          ' title="Website - Newsletter Form"></iframe>' +
+        '</div>' +
         '<a class="nl-dismiss" role="button" tabindex="0" data-nl-close>No thanks, maybe later</a>' +
       '</div>';
     document.body.appendChild(modal);
 
-    var form = modal.querySelector(".nl-form");
-    var statusEl = modal.querySelector(".nl-status");
-    var emailInput = modal.querySelector("input[name=email]");
     var lastFocus = null;
+
+    // GHL embed script (auto-resizes the iframe).
+    var embedScript = document.createElement("script");
+    embedScript.src = "https://link.msgsndr.com/js/form_embed.js";
+    document.body.appendChild(embedScript);
 
     function remember() { try { localStorage.setItem(STORAGE_KEY, String(Date.now())); } catch (e) {} }
     function openModal() {
@@ -401,7 +301,6 @@
       lastFocus = document.activeElement;
       modal.hidden = false;
       requestAnimationFrame(function () { modal.classList.add("open"); });
-      window.setTimeout(function () { try { emailInput.focus(); } catch (e) {} }, 450);
       document.addEventListener("keydown", onKey);
     }
     function closeModal(persist) {
@@ -416,37 +315,6 @@
     modal.querySelectorAll("[data-nl-close]").forEach(function (el) {
       el.addEventListener("click", function () { closeModal(); });
       el.addEventListener("keydown", function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); closeModal(); } });
-    });
-
-    form.addEventListener("submit", function (e) {
-      e.preventDefault();
-      var email = emailInput.value.trim();
-      if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
-        statusEl.textContent = "Please enter a valid email."; statusEl.className = "nl-status err"; emailInput.focus(); return;
-      }
-      var btn = form.querySelector("button[type=submit]");
-      var lbl = btn.textContent;
-      btn.disabled = true; btn.textContent = "Subscribing…";
-      statusEl.textContent = ""; statusEl.className = "nl-status";
-
-      fetch("/api/subscribe", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: email, message: "(via popup)" })
-      })
-        .then(function (r) { return r.json(); })
-        .then(function (res) {
-          if (res && res.success) {
-            statusEl.textContent = "You’re on the list — watch your inbox. Thank you!";
-            statusEl.className = "nl-status ok";
-            remember(); window.setTimeout(function () { closeModal(false); }, 2600);
-          } else { throw new Error(); }
-        })
-        .catch(function () {
-          statusEl.textContent = "Something went wrong. Please try again.";
-          statusEl.className = "nl-status err";
-        })
-        .finally(function () { btn.disabled = false; btn.textContent = lbl; });
     });
 
     window.setTimeout(openModal, 4500);

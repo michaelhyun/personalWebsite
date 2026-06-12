@@ -72,51 +72,26 @@
       <div class="wrap">
         <div class="split align-start" style="gap:clamp(2rem,6vw,5rem)">
           <!-- FORM -->
-          <form class="form" data-contact-form data-reveal>
-            <div class="field">
-              <label for="c-name">Name <span class="req">*</span></label>
-              <input id="c-name" name="name" type="text" required autocomplete="name" placeholder="Your full name" data-error="Please enter your name." />
-              <span class="field-error" aria-live="polite"></span>
-            </div>
-            <div class="form-row">
-              <div class="field">
-                <label for="c-email">Email <span class="req">*</span></label>
-                <input id="c-email" name="email" type="email" required autocomplete="email" inputmode="email" placeholder="you@email.com" data-error="Please enter a valid email." />
-                <span class="field-error" aria-live="polite"></span>
-              </div>
-              <div class="field">
-                <label for="c-phone">Phone <span class="muted" style="text-transform:none;letter-spacing:0;font-weight:400">(optional)</span></label>
-                <input id="c-phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" placeholder="(408) 489-6868" />
-              </div>
-            </div>
-            <div class="field">
-              <label for="c-interest">I’m interested in</label>
-              <select id="c-interest" name="interest">
-                <option>Buying a home</option>
-                <option>Selling a home</option>
-                <option>A home valuation</option>
-                <option>Investment property</option>
-                <option>Just exploring / general question</option>
-              </select>
-            </div>
-            <div class="field">
-              <label for="c-message">How can I help? <span class="req">*</span></label>
-              <textarea id="c-message" name="message" rows="4" required placeholder="Tell me about your goals, timeline, and the areas you’re considering…" data-error="Please add a short note."></textarea>
-              <span class="field-error" aria-live="polite"></span>
-            </div>
-            <div class="form-status" role="status" aria-live="polite"></div>
-            <label class="consent-check">
-              <input type="checkbox" name="sms_consent" value="yes" />
-              <span>I consent to receive customer-care text messages (appointment reminders, replies to my inquiry, and transaction updates) from BlueDoor Realty LLC at the phone number provided. Msg &amp; data rates may apply. Message frequency varies. Reply STOP to opt out, HELP for help.</span>
-            </label>
-            <label class="consent-check">
-              <input type="checkbox" name="sms_marketing" value="yes" />
-              <span>I consent to receive marketing text messages (new listings, market updates, and promotions) from BlueDoor Realty LLC at the phone number provided. Msg &amp; data rates may apply. Message frequency varies. Reply STOP to opt out, HELP for help.</span>
-            </label>
-            <p class="consent">Checking a box is optional and not a condition of any service or purchase.</p>
-            <button class="btn btn-lg" type="submit">Send message <span class="arrow">→</span></button>
-            <p class="consent-links"><a href="/privacy">Privacy Policy</a> · <a href="/terms">Terms of Service</a></p>
-          </form>
+          <div class="ghl-form-wrap" data-reveal style="--i:1">
+            <iframe
+              src="https://api.leadconnectorhq.com/widget/form/yY3kHhSUV5fGq5tc3bcU"
+              style="width:100%;min-height:900px;border:none;border-radius:8px"
+              id="inline-yY3kHhSUV5fGq5tc3bcU"
+              data-layout="{'id':'INLINE'}"
+              data-trigger-type="alwaysShow"
+              data-trigger-value=""
+              data-activation-type="alwaysActivated"
+              data-activation-value=""
+              data-deactivation-type="neverDeactivate"
+              data-deactivation-value=""
+              data-form-name="Website - Contact Form"
+              data-height="900"
+              data-layout-iframe-id="inline-yY3kHhSUV5fGq5tc3bcU"
+              data-form-id="yY3kHhSUV5fGq5tc3bcU"
+              title="Website - Contact Form">
+            </iframe>
+          </div>
+          <script src="https://link.msgsndr.com/js/form_embed.js"></script>
 
           <!-- ASIDE -->
           <aside class="contact-aside" data-reveal style="--i:1">
