@@ -46,6 +46,14 @@ module.exports = async function handler(req, res) {
   if (smsConsent === "yes") tags.push("SMS-Consent-CustomerCare");
   if (smsMarketing === "yes") tags.push("SMS-Consent-Marketing");
 
+  // Contact Type for GHL: "Buyer" from the buy form, "Seller" from the sell form.
+  // Newsletter/contact forms send neither, so contact_type stays empty and the GHL
+  // workflow leaves the Contact Type field untouched.
+  var contactType = "";
+  var lowerTags = tags.map(function (t) { return t.toLowerCase(); });
+  if (lowerTags.indexOf("buyer") > -1) contactType = "Buyer";
+  else if (lowerTags.indexOf("seller") > -1) contactType = "Seller";
+
   // Split full name into first/last for GHL.
   var firstName = name, lastName = "";
   if (name.indexOf(" ") > -1) { var p = name.split(/\s+/); firstName = p.shift(); lastName = p.join(" "); }
@@ -62,6 +70,7 @@ module.exports = async function handler(req, res) {
     sms_consent: smsConsent,
     sms_marketing: smsMarketing,
     tags: tags.join(", "),
+    contact_type: contactType,
     source: "website"
   };
 
