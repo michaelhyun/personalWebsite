@@ -62,7 +62,7 @@ module.exports = async function handler(req, res) {
     sms_consent: smsConsent,
     sms_marketing: smsMarketing,
     tags: tags.join(", "),
-    source: "michaelhyunn.com" + (interest ? " — " + interest : "")
+    source: "website"
   };
 
   // Primary path: GoHighLevel inbound webhook.
