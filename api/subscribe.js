@@ -9,7 +9,7 @@
 // source. If GHL is briefly unreachable, the lead is still emailed via the fallback.
 
 const EMAIL_RE = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
-const GHL_WEBHOOK = "https://services.leadconnectorhq.com/hooks/QS6MVOlOOLSEkNZekwYk/webhook-trigger/010fa2fd-9e20-4f2e-b34c-e2068d1e0de3";
+const GHL_WEBHOOK = "https://services.leadconnectorhq.com/hooks/QS6MVOlOOLSEkNZekwYk/webhook-trigger/76b5ee1e-3fdb-4117-bcef-cb1c4714f5d0";
 const WEB3FORMS_KEY = "03501446-9da3-437f-844a-a8c5fcbd3289"; // email fallback only
 
 module.exports = async function handler(req, res) {
