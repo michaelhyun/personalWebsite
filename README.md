@@ -33,7 +33,7 @@ python3 -m http.server 4173
 ---
 
 ## ✅ Already wired up
-- **Phone:** (408) 489-6868 · **DRE#:** 02442479 — live across all pages
+- **Phone:** (408) 900-2657 · **DRE#:** 02442479 — live across all pages
 - **Socials:** [Instagram](https://www.instagram.com/michaelhyun__/) · [TikTok](https://www.tiktok.com/@michaelhyun_) · [YouTube](https://www.youtube.com/@michaelhyun-1)
 - **Follow Up Boss tracking pixel** (`WT-RYYSCNAM`) installed in the `<head>` of every page
 - **Contact + valuation forms** wired to FUB via Web3Forms (access key installed in `assets/js/main.js`),
